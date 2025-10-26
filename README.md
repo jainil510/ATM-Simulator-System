@@ -20,4 +20,14 @@ The ATM Simulator allows users to perform all essential banking operations:
 
 **🛠️ Tech Stack**
 
-This project is implemented using the following technologies:**CategoryTechnologyPurposeLanguageJava**Core programming language.**GUIJava Swing / AWT**Used to create the desktop-based graphical user interface.**DatabaseMySQL**Persistent storage for user accounts, cards, and transaction history.**ConnectivityJDBC**Java Database Connectivity for connecting the application to MySQL.
+This project is implemented using the following technologies:
+
+**CategoryTechnologyPurposeLanguageJava**Core programming language.
+
+**GUIJava Swing / AWT**Used to create the desktop-based graphical user interface.
+
+**DatabaseMySQL
+
+**Persistent storage for user accounts, cards, and transaction history.
+
+**ConnectivityJDBC**Java Database Connectivity for connecting the application to MySQL.
