@@ -1,33 +1,38 @@
-**🏦 ATM Simulator System**
+```markdown
+# 🏧 ATM Simulator System
 
-This project is a comprehensive **Automated Teller Machine (ATM) Simulator System** designed to emulate the core functionalities of a real-world ATM. Built as a desktop application with a user-friendly Graphical User Interface (GUI), it demonstrates key concepts of software development, including secure authentication, transaction handling, and persistent data management.
-This project is ideal for showcasing skills in Java application development and database integration.
+### 🧰 Tech Stack
+Java | JDBC | MySQL | Swing/AWT
 
-**✨ Key Features**
+### 📖 Overview
+A desktop-based banking simulator replicating ATM functionalities such as withdrawals, deposits, account creation, and mini-statements.
+Built with **Java Swing** for GUI and **JDBC** for secure database interaction.
 
-The ATM Simulator allows users to perform all essential banking operations:
-• **Secure User Authentication:** Login using a unique Card Number and Personal Identification Number (PIN).
-• **New Account Creation (Sign Up):** Complete registration process for new customers.
-• **Transactions:**
-    ◦ **Cash Withdrawal:** Dispense cash from the account.
-    ◦ **Cash Deposit:** Add funds to the account.
-    ◦ **Fast Cash:** Quick withdrawal options for predefined amounts.
-• **Account Management:**
-    ◦ **Balance Inquiry:** Check the current available balance.
-    ◦ **Mini Statement:** View a chronological record of recent transactions.
-    ◦ **PIN Change:** Update the user's secret PIN for enhanced security.
-• **Graphical User Interface (GUI):** An intuitive, easy-to-use interface built for a desktop environment.
+### 🚀 Features
+- User authentication with PIN validation
+- Withdrawal, Deposit, and Balance Inquiry modules
+- New account registration
+- Secure transactions using **PreparedStatements**
+- Data stored persistently in **MySQL**
 
-**🛠️ Tech Stack**
+### ⚙️ Setup Instructions
+1. Clone the repository:
+   ```bash
+   git clone <https://github.com/jainil510/ATM-Simulator-System>
 
-This project is implemented using the following technologies:
+2. Create a MySQL database and update connection credentials in code.
 
-**CategoryTechnologyPurposeLanguageJava**Core programming language.
+3. Compile and run the project in any Java IDE.
 
-**GUIJava Swing / AWT**Used to create the desktop-based graphical user interface.
+🔒 Security Improvements
 
-**DatabaseMySQL
+- Removed hard-coded credentials
+- Added prepared statements to prevent SQL Injection
 
-**Persistent storage for user accounts, cards, and transaction history.
+🧠 Learning Outcomes
 
-**ConnectivityJDBC**Java Database Connectivity for connecting the application to MySQL.
+- JDBC integration and CRUD operations
+- Event-driven GUI programming with Swing
+- Basic database design and transaction handling
+
+```
