@@ -2,18 +2,19 @@ package ASimulatorSystem;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javax.swing.*;
 import java.util.*;
 
-class BalanceEnquiry extends JFrame implements ActionListener {
+public class BalanceEnquiry extends JFrame implements ActionListener {
 
     JTextField t1, t2;
     JButton b1, b2, b3;
     JLabel l1, l2, l3;
     String pin;
 
-    BalanceEnquiry(String pin) {
+    public BalanceEnquiry(String pin) {
         this.pin = pin;
 
         ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("ASimulatorSystem/icons/atm.jpg"));
@@ -39,7 +40,9 @@ class BalanceEnquiry extends JFrame implements ActionListener {
         int balance = 0;
         try{
             Conn c1 = new Conn();
-            ResultSet rs = c1.s.executeQuery("select * from bank where pin = '"+pin+"'");
+            PreparedStatement pstmt = c1.c.prepareStatement("select * from bank where pin = ?");
+            pstmt.setString(1, pin);
+            ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 if (rs.getString("mode").equals("Deposit")) {
                     balance += Integer.parseInt(rs.getString("amount"));
@@ -47,7 +50,9 @@ class BalanceEnquiry extends JFrame implements ActionListener {
                     balance -= Integer.parseInt(rs.getString("amount"));
                 }
             }
-        }catch(Exception e){}
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         
         l1.setText("Your Current Account Balance is Rs "+balance);
 

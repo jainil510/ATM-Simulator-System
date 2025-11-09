@@ -88,10 +88,14 @@ public class Login extends JFrame implements ActionListener{
             if(ae.getSource()==b1){
                 Conn c1 = new Conn();
                 String cardno  = tf1.getText();
-                String pin  = pf2.getText();
-                String q  = "select * from login where cardno = '"+cardno+"' and pin = '"+pin+"'";
+                String pin  = new String(pf2.getPassword());
+                String q  = "select * from login where cardno = ? and pin = ?";
 
-                ResultSet rs = c1.s.executeQuery(q);
+                PreparedStatement pstmt = c1.c.prepareStatement(q);
+                pstmt.setString(1, cardno);
+                pstmt.setString(2, pin);
+                ResultSet rs = pstmt.executeQuery();
+                
                 if(rs.next()){
                     setVisible(false);
                     new Transactions(pin).setVisible(true);
@@ -115,6 +119,3 @@ public class Login extends JFrame implements ActionListener{
 
     
 }
-
-
-

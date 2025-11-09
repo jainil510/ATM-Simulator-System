@@ -64,44 +64,92 @@ public class Withdrawl extends JFrame implements ActionListener{
     
     
     public void actionPerformed(ActionEvent ae){
-        try{        
-            String amount = t1.getText();
-            Date date = new Date();
-            if(ae.getSource()==b1){
-                if(t1.getText().equals("")){
-                    JOptionPane.showMessageDialog(null, "Please enter the Amount to you want to Withdraw");
-                }else{
-                    Conn c1 = new Conn();
-                    
-                    ResultSet rs = c1.s.executeQuery("select * from bank where pin = '"+pin+"'");
-                    int balance = 0;
-                    while(rs.next()){
-                       if(rs.getString("mode").equals("Deposit")){
-                           balance += Integer.parseInt(rs.getString("amount"));
-                       }else{
-                           balance -= Integer.parseInt(rs.getString("amount"));
-                       }
-                    }
-                    if(balance < Integer.parseInt(amount)){
-                        JOptionPane.showMessageDialog(null, "Insuffient Balance");
-                        return;
-                    }
-                    
-                    c1.s.executeUpdate("insert into bank values('"+pin+"', '"+date+"', 'Withdrawl', '"+amount+"')");
-                    JOptionPane.showMessageDialog(null, "Rs. "+amount+" Debited Successfully");
-                    
-                    setVisible(false);
-                    new Transactions(pin).setVisible(true);
-                }
-            }else if(ae.getSource()==b2){
-                setVisible(false);
-                new Transactions(pin).setVisible(true);
-            }
-        }catch(Exception e){
-                e.printStackTrace();
-                System.out.println("error: "+e);
+        if(ae.getSource()==b2){ 
+            setVisible(false);
+            new Transactions(pin).setVisible(true);
+            return;
         }
+
+        String amountStr = t1.getText();
+        if (amountStr.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter the amount you want to withdraw.");
+            return;
+        }
+
+        int withdrawalAmount;
+        try {
+            withdrawalAmount = Integer.parseInt(amountStr);
+            if (withdrawalAmount <= 0) {
+                JOptionPane.showMessageDialog(null, "Please enter a positive amount.");
+                return;
+            }
+            if (withdrawalAmount > 10000) {
+                 JOptionPane.showMessageDialog(null, "Maximum withdrawal amount is Rs. 10,000.");
+                 return;
+            }
+        } catch (NumberFormatException nfe) {
+            JOptionPane.showMessageDialog(null, "Please enter a valid numeric amount.");
+            return;
+        }
+
+        Conn conn = new Conn();
+        try {
+            conn.c.setAutoCommit(false);
+
+            // Get current balance
+            String balanceQuery = "SELECT balance FROM account_balance WHERE pin = ?";
+            PreparedStatement balancePstmt = conn.c.prepareStatement(balanceQuery);
+            balancePstmt.setString(1, pin);
+            ResultSet rs = balancePstmt.executeQuery();
             
+            int currentBalance = 0;
+            if (rs.next()) {
+                currentBalance = rs.getInt("balance");
+            }
+
+            if (currentBalance < withdrawalAmount) {
+                JOptionPane.showMessageDialog(null, "Insufficient Balance.");
+                return;
+            }
+
+            // Update balance
+            int newBalance = currentBalance - withdrawalAmount;
+            String updateBalanceQuery = "UPDATE account_balance SET balance = ? WHERE pin = ?";
+            PreparedStatement updateBalancePstmt = conn.c.prepareStatement(updateBalanceQuery);
+            updateBalancePstmt.setInt(1, newBalance);
+            updateBalancePstmt.setString(2, pin);
+            updateBalancePstmt.executeUpdate();
+
+            // Record transaction
+            String transactionQuery = "INSERT INTO bank (pin, date, mode, amount) VALUES (?, ?, 'Withdrawal', ?)";
+            PreparedStatement transactionPstmt = conn.c.prepareStatement(transactionQuery);
+            transactionPstmt.setString(1, pin);
+            transactionPstmt.setString(2, new Date().toString());
+            transactionPstmt.setInt(3, withdrawalAmount);
+            transactionPstmt.executeUpdate();
+
+            conn.c.commit();
+
+            JOptionPane.showMessageDialog(null, "Rs. " + withdrawalAmount + " debited successfully.");
+
+            setVisible(false);
+            new Transactions(pin).setVisible(true);
+
+        } catch (SQLException ex) {
+            try {
+                conn.c.rollback();
+            } catch (SQLException rollbackEx) {
+                rollbackEx.printStackTrace();
+            }
+            JOptionPane.showMessageDialog(null, "An error occurred. Please try again.");
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (conn.c != null) conn.c.close();
+            } catch (SQLException closeEx) {
+                closeEx.printStackTrace();
+            }
+        }
     }
 
     
