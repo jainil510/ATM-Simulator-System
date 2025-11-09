@@ -132,6 +132,3 @@ Integrate email/SMS notifications using JavaMail API.
 
 Jainil Ulhas Patil
 📍 Pune, India
-🔗 LinkedIn
-
-💻 GitHub
